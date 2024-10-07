@@ -1,0 +1,199 @@
+# Basic commands of linux
+
+1) ls        Lists all the directories and files in current directory
+
+2) cd        changes the directory (just like how we change folders in windows)
+
+3) mkdir     Makes directory and you can make more than one at once
+
+4) cat>      Make a file and add content in it
+
+5) cat       shows whats written inside the file
+
+6) vi        Makes and edits file (It is a file editor)
+
+7) nano      It is also a editor like vi 
+
+8) touch     Makes an empty file or can change timestamp
+
+9) rm        Removes a specific file
+
+10) rmdir    Removes specific empty directory
+
+11) rm -rf   Removes all empty files and directories
+
+12) rm -rf *  Removes all files and directories in current directory
+
+13) sudo apt install       Installs the packages
+
+14) wget link              Installs via link everything
+
+15) sudo apt update        Updates packages present
+
+
+
+
+
+
+
+# This is  whole installtion processes / commands of packages
+
+#Git installation (If not installed)
+
+ 1) sudo apt install git -y
+ 
+
+ # Git commands
+
+  1) git init                 (Makes three boxes 1. Working area  2. Staging area  3. Local repo )
+    # Use this command everytime you work on a project
+
+  { # Most important commands
+  
+     git remote add origin Github link
+     git branch branchname                               (To make a branch)
+     git branch                                          (To check your current branch)
+     git checkout branchname                             (To switch to the selected branch)
+     git checkout -b "branchname"                        (To make and switch on that branch)
+     git checkout -d "branchname"                        (To delete the selected branch)        }
+
+  2) git add Filename         (Adds a file to the staging area) OR git add . (. means all the files in the current
+    directory)
+
+  3) git reset                (Resets what you have added to staging area)
+  4) git status               (To check untracked files and tracked files) 
+    # Tracked files are those which are added to staging area and untracked are those which are not added
+   
+  5) git reset --hard                         (Removes all the changes done in staging area and working  area) 
+  
+  6) git commit -m  "Your commit message"     (Commits changes to local repo) 
+  7) git revert                               (Resets commit done by you)
+  8) git push origin branchname               (Pushes the code to github repo)
+  9) git pull origin main                     (Pulls the github code to your server)
+
+
+
+ # You need to generate a PERSONAL ACCESS TOKEN to push the code
+  1) Go to Github 
+  2) Open your profile
+  3) Open settings
+  4) Open developer settings
+  5) Select personal access tokens
+  6) Select Token(Classic)
+  7) Click on Generate new token 
+  8) Give permissions that you want to give to that token
+  9) Generate the token and save it somewhere safe so that you can copy paste it anytime
+
+
+
+
+
+
+
+
+
+# Jenkins Installation
+ 
+  You need to install jdk if you don't have it 
+  commands:
+
+   1) sudo apt update
+   2) sudo apt install fontconfig openjdk-17-jre -y    #You can run both commands at once
+   3) java -version                                    #To check if java is installed correctly
+
+  
+  #Now lets install jenkins
+
+1) sudo wget -O /usr/share/keyrings/jenkins-keyring.asc \
+  https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+
+
+2) echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc]" \
+  https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+    /etc/apt/sources.list.d/jenkins.list > /dev/null
+
+3) sudo apt-get update
+4) sudo apt-get install jenkins
+
+   
+
+   # To access jenkins on web
+   
+    1) Go to your instances and click on instance where you installed jenkins.
+    2) Go to security tab
+    3) Click on security group and {"Edit inbound rules"} and add rule with port 8080 and custom tcp anywhere 
+       ipv4 and save
+    4) Copy your instance public ip and paste it on Chrome search tab
+    5) Then add :8080 after your public ip
+   
+  
+   # Setup jenkins
+    1) copy the path given on the screen with red colour
+    2) go to your terminal and run:
+       sudo cat (Paste given path here)
+    3) copy output and paste as password on jenkins
+    4) Make a user on jenkins
+  
+        # Next time you turn on your instance it will ask you the user and password and you will insert 
+	#one you inserted when creating user
+
+
+
+# Installation of maven 
+  
+  Here also you must have java installed so 
+   commands :
+
+     1) sudo apt update
+     2) sudo apt install fontconfig openjdk-17-jre -y 
+
+     3) sudo apt install maven -y
+ 
+ 
+  # Command of maven 
+
+   1) mvn clean package
+   2) make clean package   (sudo apt install make -y)  # You need to install make command first
+   3) mvn package 
+   4) mvn -v                     # To check maven version
+
+
+
+# Installation of Docker and Docker-compose
+
+   1) sudo apt update 
+   2) sudo apt install docker.io              # This command installs docker
+   3) sudo apt install docker-compose         # This command installs docker-compose
+
+
+    # You will need docker-hub in the future so make a docker hub account 
+     It is just like github 
+
+  
+  
+  # Docker commands
+
+   1) docker build -t Tag:tag number   (To build a docker image from Dockerfile)
+   2) docker run -d (Detached mode so your terminal would be free to use) -t Container tag and container name
+       (To run the image in container)
+ 
+   3) docker ps           (To check running containers)
+   4) docker ps -a        (Show all containers )
+   5) docker images OR docker image ls            (to list images)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
