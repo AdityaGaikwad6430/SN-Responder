@@ -186,10 +186,53 @@
 
 
 
+# Steps for adding agent of jenkins
+  
+  1) You need another instance as an agent
+     so make an agent first and give it same key pair so
+     you can access it easily.
 
+  2) Setup agent by going to manage jenkins
+  3) Go to nodes section and add a node
+  4) Give it a path where you want make the build directory
+  5) Give it a label as you can renember that label eg. Jenkins
+  6) Click on launch method and select ssh 
 
+  7) Now here comes the 2nd instance in work
+     Copy its public IP and paste it under Host
+  8) And click on credentials and select jenkins
+  9) Now select kind as SSH Username with private key
+  10) And fill the blanks
+  11) Id means the name you want to give to the key
+  12) use Username as ubuntu
+  13) Now go to your main instance where you installed jenkins
+  14) follow these commands 
+       1) cd .ssh
+       2) ssh-keygen
+       3) ls
+       4) cat (paste the name of file which starts with id )
+           eg. id1037 (it must not be .pub)
 
+       5) copy the output 
 
+  15) click on add and paste the output in the jenkins by 
+      clicking enter directly
+  16) Now click on Add
+  17) Click on Host key verification strategy and select
+      Non verifying Verification strategy
+
+  18) and save it
+  19) Now go to your main instance terminal 
+      Follow these steps
+      1) cd .ssh
+      2) ls
+      3) cat (Paste .pub filename)
+      4) Copy output and go to your agent terminal
+      5) cd .ssh
+      6) vi authorised_keys 
+         paste your output under those lines after leavimg 1-2 lines
+
+  20) Go to jenkins and launch Agent
 
 
 
