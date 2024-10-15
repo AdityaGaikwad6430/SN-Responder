@@ -36,8 +36,8 @@ And these are the steps and commands
       User=tomcat
       Group=tomcat
       Environment="JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64"
-      WorkingDirectory=/opt/tomcat/apache-tomcat-10.1.24
-      ExecStart=/opt/tomcat/apache-tomcat-10.1.24/bin/startup.sh
+      WorkingDirectory=/opt/tomcat/apache-tomcat-9.0.96
+      ExecStart=/opt/tomcat/apache-tomcat-9.0.96/bin/startup.sh
 
       [Install]
       WantedBy=multi-user.target
