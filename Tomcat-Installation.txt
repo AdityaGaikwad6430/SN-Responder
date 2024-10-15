@@ -50,3 +50,6 @@ And these are the steps and commands
   8) sudo systemctl enable tomcat
 
 
+9) sudo ufw allow 8080
+
+
