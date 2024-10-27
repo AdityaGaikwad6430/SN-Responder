@@ -6,11 +6,11 @@ echo "Installing maven"
 
 
 sleep 1
-maven=(sudo apt update)
+maven=$(sudo apt update)
 
 sleep 3
 
-maven2=(sudo apt install maven -y)
+maven2=$(sudo apt install maven -y)
 
 
 sleep 3
@@ -18,6 +18,6 @@ sleep 3
 echo"Maven has been installed"
 
 sleep 1
-mvnversion=(mvn -version)
+mvnversion=$(mvn -version)
 
 echo "This the maven version $mvnversion"
