@@ -23,7 +23,7 @@ And these are the steps and commands
 
   4) cd /etc/systemd/system
 
-  5) sudo vi tomcat.service
+  5) sudo nano tomcat.service
     # Add these lines as it is in the edited file
     #[Unit] , [Service] , [Install] Should be green
       
