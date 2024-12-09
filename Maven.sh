@@ -10,7 +10,7 @@ maven=$(sudo apt update)
 
 sleep 3
 
-maven2=$(sudo apt install maven -y)
+maven2=$(sudo apt install -y maven)
 
 
 sleep 3
