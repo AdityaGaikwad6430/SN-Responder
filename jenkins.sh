@@ -30,3 +30,5 @@ Apt=$(sudo apt-get update)
 installing=$(sudo apt-get install -y  jenkins)
 
 echo "Jenkins Is  installed successfully."
+
+jenki=$(sudo ufw allow 8080)
