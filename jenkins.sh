@@ -5,7 +5,7 @@ echo "This is installation of Jenkins"
 sleep 2
 
 jenkins=$(sudo apt update)
-java=$(sudo apt install fontconfig openjdk-17-jre -y )
+java=$(sudo apt install -y openjdk-17-jre )
 
 echo "Installed java"
 
@@ -27,6 +27,6 @@ sleep 5
 
 Apt=$(sudo apt-get update)
 
-installing=$(sudo apt-get install jenkins)
+installing=$(sudo apt-get install -y  jenkins)
 
 echo "Jenkins Is  installed successfully."
