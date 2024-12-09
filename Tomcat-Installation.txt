@@ -50,8 +50,8 @@ WantedBy=multi-user.target
 
   6) sudo systemctl daemon-reload
 
-  7) sudo systemctl start tomcat                (This starts jenkins)
-  8) sudo systemctl enable tomcat               (This starts jenkins on startup automatically)    
+  7) sudo systemctl start tomcat                (This starts Tomcat)
+  8) sudo systemctl enable tomcat               (This starts Tomcat on startup automatically)    
 
 
 9) sudo ufw allow 8080                 (This allows port number 8080 for global)     
