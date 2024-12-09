@@ -28,29 +28,32 @@ And these are the steps and commands
     #[Unit] , [Service] , [Install] Should be green
       
 
-      [Unit]
-      Description=Tomcat Server
-      After=network.target
+[Unit]
 
-      [Service]
-      Type=forking
-      User=tomcat
-      Group=tomcat
-      Environment="JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64"
-      WorkingDirectory=/opt/tomcat/apache-tomcat-11.0.1
-      ExecStart=/opt/tomcat/apache-tomcat-11.0.1/bin/startup.sh
+Description=Tomcat Server
+After=network.target
 
-      [Install]
-      WantedBy=multi-user.target
+[Service]
+
+Type=forking
+User=tomcat
+Group=tomcat
+Environment="JAVA_HO ME=/usr/lib/jvm/java-17-openjdk-amd64"
+WorkingDirectory=/opt/tomcat/apache-tomcat-11.0.1
+ExecStart=/opt/tomcat/apache-tomcat-11.0.1/bin/startup.sh
+
+[Install]
+
+WantedBy=multi-user.target
 
 
 
   6) sudo systemctl daemon-reload
 
-  7) sudo systemctl start tomcat
-  8) sudo systemctl enable tomcat
+  7) sudo systemctl start tomcat                (This starts jenkins)
+  8) sudo systemctl enable tomcat               (This starts jenkins on startup automatically)    
 
 
-9) sudo ufw allow 8080
+9) sudo ufw allow 8080                 (This allows port number 8080 for global)     
 
 
