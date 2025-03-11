@@ -15,9 +15,9 @@ And these are the steps and commands
 
 # Installing Tomcat
 
-  1) sudo wget https://dlcdn.apache.org/tomcat/tomcat-11/v11.0.2/bin/apache-tomcat-11.0.2.tar.gz -P /tmp
+  1) sudo wget https://dlcdn.apache.org/tomcat/tomcat-11/v11.0.5/bin/apache-tomcat-11.0.5.tar.gz -P /tmp
 
-  2) sudo tar -xvf /tmp/apache-tomcat-11.0.2.tar.gz -C /opt/tomcat
+  2) sudo tar -xvf /tmp/apache-tomcat-11.0.5.tar.gz -C /opt/tomcat
 
   3) sudo chown -R tomcat:tomcat /opt/tomcat
 
@@ -39,8 +39,8 @@ Type=forking
 User=tomcat
 Group=tomcat
 Environment="JAVA_HO ME=/usr/lib/jvm/java-17-openjdk-amd64"
-WorkingDirectory=/opt/tomcat/apache-tomcat-11.0.2
-ExecStart=/opt/tomcat/apache-tomcat-11.0.2/bin/startup.sh
+WorkingDirectory=/opt/tomcat/apache-tomcat-11.0.5
+ExecStart=/opt/tomcat/apache-tomcat-11.0.5/bin/startup.sh
 
 [Install]
 
