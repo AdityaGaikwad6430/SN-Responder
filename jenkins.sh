@@ -1,13 +1,7 @@
 #!/bin/bash
+apt update -y
 
-echo "This is installation of Jenkins"
-
-sleep 2
-
-jenkins=$(sudo apt update)
-java=$(sudo apt install -y openjdk-17-jre )
-
-echo "Installed java"
+apt install -y openjdk-17-jre 
 
 Jenk=$(sudo wget -O 
 /usr/share/keyrings/jenkins-keyring.asc \
@@ -16,10 +10,6 @@ Jenka=$(echo "deb
 [signed-by=/usr/share/keyrings/jenkins-keyring.asc]" \
   https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
     /etc/apt/sources.list.d/jenkins.list > /dev/null)
-
-
-
-
 
 echo "Installing jenkins ..."
 sleep 5
