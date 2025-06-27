@@ -1,0 +1,36 @@
+<!-- index.html --><!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adi Photography</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Adi Photography</h1>
+    <p>Capturing memories in every frame</p>
+  </header>  <section class="packages">
+    <h2>Our Packages</h2>
+    <div class="package">
+      <h3>Basic Shoot</h3>
+      <p>Includes 50 digital photos and light editing.</p>
+      <button onclick="selectPackage('Basic Shoot')">Select</button>
+    </div>
+    <div class="package">
+      <h3>Wedding Special</h3>
+      <p>Full-day coverage + Album + 150 edited photos.</p>
+      <button onclick="selectPackage('Wedding Special')">Select</button>
+    </div>
+    <div class="package">
+      <h3>Portfolio Shoot</h3>
+      <p>Professional headshots and edits included.</p>
+      <button onclick="selectPackage('Portfolio Shoot')">Select</button>
+    </div>
+  </section>  <script>
+    function selectPackage(packageName) {
+      const msg = `Hi Adi! I'm interested in your "${packageName}" photography package.`;
+      const whatsappURL = `https://wa.me/91YOURNUMBER?text=${encodeURIComponent(msg)}`;
+      window.open(whatsappURL, '_blank');
+    }
+  </script></body>
+</html>
