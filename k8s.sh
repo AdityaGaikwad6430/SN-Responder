@@ -1,12 +1,11 @@
 #!/bin/bash
-
+set -e  
 # === 1. Basic system setup ===
 sudo hostnamectl set-hostname control
 sudo swapoff -a
 sudo sed -i '/ swap / s/^/#/' /etc/fstab
-
 # === 2. Kernel modules and sysctl settings ===
-cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
+cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf > /dev/null
 overlay
 br_netfilter
 EOF
@@ -14,7 +13,7 @@ EOF
 sudo modprobe overlay
 sudo modprobe br_netfilter
 
-cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf > /dev/null
 net.bridge.bridge-nf-call-iptables = 1
 net.ipv4.ip_forward = 1
 net.bridge.bridge-nf-call-ip6tables = 1
@@ -22,20 +21,20 @@ EOF
 
 sudo sysctl --system
 
-# === 3. Install Docker ===
-sudo apt update
-sudo apt install -y docker.io
-sudo systemctl enable docker --now
+
+sudo apt-get update -y
+sudo apt-get install -y docker.io
+sudo systemctl enable --now docker
 
 # === 4. Install cri-dockerd (v0.3.11 - stable) ===
-wget https://github.com/Mirantis/cri-dockerd/releases/download/v0.3.11/cri-dockerd-0.3.11.amd64.tgz
-tar -xvf cri-dockerd-0.3.11.amd64.tgz
-sudo mv cri-dockerd/cri-dockerd /usr/local/bin/
+wget -q https://github.com/Mirantis/cri-dockerd/releases/download/v0.3.11/cri-dockerd-0.3.11.amd64.tgz
+tar -xzf cri-dockerd-0.3.11.amd64.tgz
+sudo mv -f cri-dockerd/cri-dockerd /usr/local/bin/
 sudo chmod +x /usr/local/bin/cri-dockerd
 sudo chown root:root /usr/local/bin/cri-dockerd
 
 # === 5. Systemd service for cri-dockerd ===
-cat <<EOF | sudo tee /etc/systemd/system/cri-dockerd.service
+cat <<EOF | sudo tee /etc/systemd/system/cri-dockerd.service > /dev/null
 [Unit]
 Description=CRI interface for Docker Application Container Engine
 Documentation=https://docs.mirantis.com
@@ -54,8 +53,7 @@ LimitNOFILE=1048576
 WantedBy=multi-user.target
 EOF
 
-# Socket unit
-cat <<EOF | sudo tee /etc/systemd/system/cri-dockerd.socket
+cat <<EOF | sudo tee /etc/systemd/system/cri-dockerd.socket > /dev/null
 [Unit]
 Description=CRI dockerd socket
 
@@ -69,18 +67,17 @@ SocketGroup=docker
 WantedBy=sockets.target
 EOF
 
-# Enable and start services
 sudo systemctl daemon-reexec
 sudo systemctl daemon-reload
 sudo systemctl enable --now cri-dockerd.service cri-dockerd.socket
 
 # === 6. Install Kubernetes tools ===
-sudo apt update
-sudo apt install -y apt-transport-https ca-certificates curl gpg
+sudo apt-get update -y
+sudo apt-get install -y apt-transport-https ca-certificates curl gpg
 sudo curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
-sudo apt update
-sudo apt install -y kubelet kubeadm kubectl
+echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list > /dev/null
+sudo apt-get update -y
+sudo apt-get install -y kubelet kubeadm kubectl
 sudo apt-mark hold kubelet kubeadm kubectl
 
 # === 7. Initialize Kubernetes ===
@@ -90,7 +87,7 @@ sudo kubeadm init \
 
 # === 8. Setup kubectl for the current user ===
 mkdir -p $HOME/.kube
-sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo cp -f /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 # === 9. Apply Calico CNI plugin ===
