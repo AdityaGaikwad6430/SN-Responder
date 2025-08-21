@@ -92,3 +92,18 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 # === 9. Apply Calico CNI plugin ===
 kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.3/manifests/calico.yaml
+
+# === 10. Install Helm ===
+curl https://baltocdn.com/helm/signing.asc | sudo gpg --dearmor -o /usr/share/keyrings/helm.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list > /dev/null
+sudo apt-get update -y
+sudo apt-get install -y helm
+
+# === 11. Setup Migration Server (NFS server) ===
+# This allows pods and other servers to share persistent storage easily
+sudo apt-get install -y nfs-kernel-server
+sudo mkdir -p /srv/nfs/kubedata
+sudo chown nobody:nogroup /srv/nfs/kubedata
+echo "/srv/nfs/kubedata *(rw,sync,no_subtree_check,no_root_squash)" | sudo tee -a /etc/exports
+sudo exportfs -rav
+sudo systemctl enable --now nfs-server
