@@ -1,9 +1,9 @@
 #!/bin/bash
-set -e  
 # === 1. Basic system setup ===
 sudo hostnamectl set-hostname control
 sudo swapoff -a
 sudo sed -i '/ swap / s/^/#/' /etc/fstab
+
 # === 2. Kernel modules and sysctl settings ===
 cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf > /dev/null
 overlay
@@ -21,7 +21,7 @@ EOF
 
 sudo sysctl --system
 
-
+# === 3. Install Docker ===
 sudo apt-get update -y
 sudo apt-get install -y docker.io
 sudo systemctl enable --now docker
@@ -43,7 +43,7 @@ Wants=network-online.target
 Requires=docker.service
 
 [Service]
-ExecStart=/usr/local/bin/cri-dockerd --container-runtime-endpoint fd://
+ExecStart=/usr/local/bin/cri-dockerd --container-runtime-endpoint=unix:///var/run/cri-dockerd.sock
 Restart=always
 StartLimitBurst=3
 StartLimitInterval=60s
@@ -67,7 +67,6 @@ SocketGroup=docker
 WantedBy=sockets.target
 EOF
 
-sudo systemctl daemon-reexec
 sudo systemctl daemon-reload
 sudo systemctl enable --now cri-dockerd.service cri-dockerd.socket
 
@@ -80,7 +79,7 @@ sudo apt-get update -y
 sudo apt-get install -y kubelet kubeadm kubectl
 sudo apt-mark hold kubelet kubeadm kubectl
 
-# === 7. Initialize Kubernetes ===
+# === 7. Initialize Kubernetes with Docker (via cri-dockerd) ===
 sudo kubeadm init \
   --cri-socket unix:///var/run/cri-dockerd.sock \
   --pod-network-cidr=192.168.0.0/16
@@ -100,10 +99,9 @@ sudo apt-get update -y
 sudo apt-get install -y helm
 
 # === 11. Setup Migration Server (NFS server) ===
-# This allows pods and other servers to share persistent storage easily
 sudo apt-get install -y nfs-kernel-server
 sudo mkdir -p /srv/nfs/kubedata
 sudo chown nobody:nogroup /srv/nfs/kubedata
-echo "/srv/nfs/kubedata *(rw,sync,no_subtree_check,no_root_squash)" | sudo tee -a /etc/exports
+echo "/srv/nfs/kubedata *(rw,sync,no_subtree_check,no_root_squash,insecure)" | sudo tee -a /etc/exports
 sudo exportfs -rav
 sudo systemctl enable --now nfs-server
