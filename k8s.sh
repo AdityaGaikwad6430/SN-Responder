@@ -1,4 +1,9 @@
 #!/bin/bash
+set -e
+set -o pipefail
+
+export DEBIAN_FRONTEND=noninteractive
+
 # === 1. Basic system setup ===
 sudo hostnamectl set-hostname control
 sudo swapoff -a
@@ -73,6 +78,7 @@ sudo systemctl enable --now cri-dockerd.service cri-dockerd.socket
 # === 6. Install Kubernetes tools ===
 sudo apt-get update -y
 sudo apt-get install -y apt-transport-https ca-certificates curl gpg
+sudo mkdir -p /etc/apt/keyrings
 sudo curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list > /dev/null
 sudo apt-get update -y
@@ -82,7 +88,8 @@ sudo apt-mark hold kubelet kubeadm kubectl
 # === 7. Initialize Kubernetes with Docker (via cri-dockerd) ===
 sudo kubeadm init \
   --cri-socket unix:///var/run/cri-dockerd.sock \
-  --pod-network-cidr=192.168.0.0/16
+  --pod-network-cidr=192.168.0.0/16 \
+  --ignore-preflight-errors=all
 
 # === 8. Setup kubectl for the current user ===
 mkdir -p $HOME/.kube
@@ -93,7 +100,7 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.3/manifests/calico.yaml
 
 # === 10. Install Helm ===
-curl https://baltocdn.com/helm/signing.asc | sudo gpg --dearmor -o /usr/share/keyrings/helm.gpg
+curl -fsSL https://baltocdn.com/helm/signing.asc | sudo gpg --dearmor -o /usr/share/keyrings/helm.gpg
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list > /dev/null
 sudo apt-get update -y
 sudo apt-get install -y helm
