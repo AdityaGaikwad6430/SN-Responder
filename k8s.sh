@@ -28,7 +28,7 @@ sudo apt-get install -y docker.io
 sudo systemctl enable docker
 sudo systemctl start docker
 
-# Allow kubelet to use systemd as cgroup driver
+# Configure Docker to use systemd cgroup driver
 cat <<EOF | sudo tee /etc/docker/daemon.json
 {
   "exec-opts": ["native.cgroupdriver=systemd"]
@@ -38,7 +38,7 @@ EOF
 sudo systemctl restart docker
 
 # ==============================
-# 4. Add Kubernetes Repository (NEW for Ubuntu 24.04)
+# 4. Add Kubernetes Repository (Ubuntu 24.04 - v1.30 stable)
 # ==============================
 sudo mkdir -p /etc/apt/keyrings
 
@@ -57,23 +57,37 @@ sudo apt-get update -y
 sudo apt-get install -y kubelet kubeadm kubectl
 sudo apt-mark hold kubelet kubeadm kubectl
 
-# Enable kubelet service
 sudo systemctl enable kubelet
 sudo systemctl start kubelet
 
 # ==============================
-# 6. Initialize Kubernetes Control Plane
+# 6. Initialize Kubernetes Control Plane with Docker
 # ==============================
-sudo kubeadm init --pod-network-cidr=10.244.0.0/16
+PRIVATE_IP=$(hostname -i)
 
-# Setup kubeconfig for regular user
+sudo kubeadm reset -f
+sudo kubeadm init \
+  --pod-network-cidr=10.244.0.0/16 \
+  --cri-socket=unix:///var/run/docker.sock \
+  --apiserver-advertise-address=$PRIVATE_IP
+
+# ==============================
+# 7. Setup kubeconfig for user
+# ==============================
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 # ==============================
-# 7. Install Pod Network (Flannel)
+# 8. Install Flannel CNI
 # ==============================
 kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 
-echo "✅ Kubernetes Control Plane setup completed on Ubuntu 24.04!"
+# ==============================
+# 9. Print Join Command for Workers
+# ==============================
+echo "===================================================="
+echo "✅ Kubernetes Control Plane is ready!"
+echo "👉 Use the following command on your workers to join:"
+kubeadm token create --print-join-command
+echo "===================================================="
